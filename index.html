@@ -1,0 +1,93 @@
+<html lang="en">
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta charset="UTF-8">
+        <!-- Angular Material style sheet -->
+        <link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/angular_material/1.1.0/angular-material.min.css">
+        <link rel="stylesheet" href="./css/main.css">
+        <link rel="shortcut icon" type="image/png" href="img/markers/StopIcon.png">
+        <title>BussiKartta</title>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+    </head>
+    <body ng-app="TestApp" ng-cloak>
+        <div ng-controller="AppCtrl" layout="column" ng-cloak>
+            <md-sidenav class="md-sidenav-left" md-component-id="left" md-disable-backdrop md-whiteframe="4">
+                <md-toolbar class="md-theme-indigo">
+                    <div class="md-toolbar-tools">
+                        <md-button class="md-icon-button" aria-label="Back" ng-click="toggleLeft()">
+                            <md-icon md-svg-icon="img/icons/back.svg"></md-icon>
+                        </md-button>
+                        <h2 flex md-truncate>INFO</h2>
+                        <md-button aria-label="Back" ng-click="Map.clear()">
+                            <h3>Palaa</h3>
+                        </md-button>
+                    </div>
+                </md-toolbar>
+                <md-content layout-margin>
+                    <div ng-show="!Map.StopTarget&&Map.BusTarget">
+                        <h1>{{ Map.BusTarget.LineRef }}</h1>
+                        <md-list>
+                            <md-list-item class="md-2-line" ng-repeat="stop in Map.BusTarget.Stops" ng-click="Map.setStopTarget(stop.code)">
+                                <img ng-src="img/markers/StopIcon.png" class="md-avatar" alt="">
+                                <div class="md-list-item-text">
+                                    <h3>{{stop.code}}</h3>
+                                    <p>{{stop.name}}</p>
+                                </div>
+                            </md-list-item>
+                        </md-list>
+                    </div>
+                    <div ng-show="Map.StopTarget">
+                        <h1>{{ Map.StopTarget.data.code }}</h1>
+                        <h2>{{ Map.StopTarget.data.name_fi }}</h2>
+                        <md-list>
+                            <md-list-item class="md-2-line" ng-repeat="bus in Map.StopTarget.data.departures">
+                                <h2 class="md-avatar">{{bus.code}}</h2>
+                                <div class="md-list-item-text">
+                                    <h3>{{bus.time.substr(0,2) + ":" + bus.time.substr(2)}}</h3>
+                                    <p>{{bus.name1}}</p>
+                                </div>
+                            </md-list-item>
+                        </md-list>
+                    </div>
+                </md-content>
+            </md-sidenav>
+
+            <md-toolbar class="md-hue-2">
+                <div class="md-toolbar-tools">
+                    <md-button class="md-icon-button" aria-label="Settings" ng-click="toggleLeft()" ng-disabled="!Map.StopTarget&&!Map.BusTarget">
+                        <md-icon md-svg-icon="img/icons/menu.svg"></md-icon>
+                    </md-button>
+                    <h2 flex md-truncat>Bussit</h2>
+                    <md-autocomplete id="autocomplete"
+                          ng-disabled="false"
+                          md-search-text="searchText"
+                          md-selected-item-change="searchItemChange(item)"
+                          md-items="item in querySearch(searchText)"
+                          md-item-text="item.display"
+                          md-min-length="0"
+                          placeholder="Hae Bussia tai pysäkkiä" flex>
+                        <md-item-template>
+                            <span md-highlight-text="searchText" md-highlight-flags="^i">{{item}}</span>
+                        </md-item-template>
+                        <md-not-found>
+                            NotFound
+                        </md-not-found>
+                    </md-autocomplete>
+                </div>
+            </md-toolbar>
+            <div id="map"></div>
+        </div>
+
+        <!-- Angular Material requires Angular.js Libraries -->
+        <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular.min.js"></script>
+        <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-animate.min.js"></script>
+        <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-aria.min.js"></script>
+        <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-messages.min.js"></script>
+        <!-- Angular Material Library -->
+        <script src="http://ajax.googleapis.com/ajax/libs/angular_material/1.1.0/angular-material.min.js"></script>
+        <!-- Your application bootstrap  -->
+        <script src="js/Map.js" charset="utf-8"></script>
+        <script src="js/App.js" charset="utf-8"></script>
+        <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCrymiA3oUUbrG33bSVxaW3LGnL5n7Izw8&callback=initMap"></script>
+    </body>
+</html>
